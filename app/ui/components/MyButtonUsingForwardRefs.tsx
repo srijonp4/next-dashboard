@@ -1,8 +1,8 @@
-import React, { Ref } from 'react';
+import React, { forwardRef, Ref } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/app/lib/utils';
 
-const myButtonVariants = cva(
+const myButtonVariantsUsingForwardRefs = cva(
   'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 dark:hover:bg-slate-800 dark:hover:text-slate-100 disabled:opacity-50 dark:focus:ring-slate-400 disabled:pointer-events-none dark:focus:ring-offset-slate-900 data-[state=open]:bg-slate-100 dark:data-[state=open]:bg-slate-800',
   {
     variants: {
@@ -33,19 +33,23 @@ const myButtonVariants = cva(
 
 interface ButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof myButtonVariants> {
+    VariantProps<typeof myButtonVariantsUsingForwardRefs> {
   asChild?: boolean;
   ref?: Ref<HTMLButtonElement>;
 }
 
-const MyButton = ({ ref, className, size, variant, ...props }: ButtonProps) => {
-  return (
-    <button
-      ref={ref}
-      className={cn(myButtonVariants({ variant, className, size }))}
-      {...props}
-    />
-  );
-};
+const MyButtonUsingForwardRefs = forwardRef<HTMLButtonElement, ButtonProps>(
+  ({ className, size, variant, ...props }, ref) => {
+    return (
+      <button
+        ref={ref}
+        className={cn(
+          myButtonVariantsUsingForwardRefs({ variant, className, size })
+        )}
+        {...props}
+      />
+    );
+  }
+);
 
-export { myButtonVariants, MyButton };
+export { myButtonVariantsUsingForwardRefs, MyButtonUsingForwardRefs };
